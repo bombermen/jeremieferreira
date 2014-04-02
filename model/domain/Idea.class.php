@@ -5,21 +5,18 @@
  *
  * @author Jeremie FERREIRA
  */
-class Idea {
-    /**
-     * @var int
-     */
-    private $_id;
-
+class Idea extends Domain {
     /**
      * @var DateTime
      */
     private $_postDate;
 
+    //references
     /**
-     * @var Publication|Array
+     * Publications list.
+     * @var int|Array
      */
-    private $_publications;
+    private $_publications = array();
 
     /**
      * array ctor
@@ -27,28 +24,39 @@ class Idea {
      */
     public function Idea($tab = array()) {
         if(isset($tab)) {
-            if(isset( $tab['id'] )) $this->_id = $tab['id'];
+
+            //optional field id
+            if(isset( $tab['id'] )) {
+                $this->_id = (int)$tab['id'];
+            }
+
+            //required field postDate
             if(isset( $tab['postDate'] )) {
                 $this->_postDate = new DateTime();
                 $this->_postDate->setTimestamp( $tab['postDate'] );
+            } else {
+                throw new RequiredFieldException('postDate');
             }
-            if(isset( $tab['publications'] )) $this->_publications = $tab['publications'];
         }
     }
 
     /**
-     * @return int
+     * Get all the set values
+     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
      */
-    public function getId() {
-        return $this->_id;
+    public function getNotNullValues() {
+        $attributes = array();
+        if( isset( $this->_postDate ) )
+            $attributes['postDate'] = 'FROM_UNIXTIME('.$this->_postDate->getTimestamp().')';
+        return $attributes;
     }
 
     /**
-     * @param int
+     * Load all the publications for this idea
      */
-    public function setId($id) {
-        $this->_id = $id;
-    }
+     public function loadPublications() {
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdIdea;
+     }
 
     /**
      * @return DateTime
@@ -65,17 +73,10 @@ class Idea {
     }
 
     /**
-     * @return Publication|Array
+     * @var Publication|Array
      */
-    public function getPublications() {
-        return $this->_publications;
-    }
-
-    /**
-     * @param Publication|Array
-     */
-    public function setPublications($publications) {
-        $this->_publications = $publications;
-    }
+     public function getPublications() {
+         return $this->_publications;
+     }
 
 }

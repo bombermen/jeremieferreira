@@ -1,8 +1,13 @@
 <?php
+//commons
+require_once 'util/RequiredFieldException.class.php';
+require_once 'util/Utilities.class.php';
+
 //connection
 require_once 'sql/Connection.class.php';
 
 //domain
+require_once 'domain/Domain.class.php';
 require_once 'domain/Person.class.php';
 require_once 'domain/Publication.class.php';
 require_once 'domain/Idea.class.php';

@@ -26,19 +26,20 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
      */
     private $_deleteStatement;
 
-    /**
-     * Check all class attributes
-     * Used by insert and update
-     * @param TechnologyCategory $technologyCategory instance to check
-     * @return mixed|Array|Array array of couple (attribute_name - attribute_value) for each not null-value
+    /*
+     * @var PDOStatement
      */
-    private static function check($technologyCategory) {
-        $attributes = array();
-        if(!is_null($technologyCategory->getname()))
-            $attributes[] = array('name', "'".$technologyCategory->getname()."'");
-        if(!is_null($technologyCategory->getdescription()))
-            $attributes[] = array('description', "'".$technologyCategory->getdescription()."'");
-            return $attributes;    }
+    private $_selectByIdTechnologyStatement;
+
+    /*
+     * @var PDOStatement
+     */
+    private $_deleteTechnologyCategoryTechnologysStatement;
+
+    /*
+     * @var PDOStatement
+     */
+    private $_insertTechnologyCategoryTechnologysStatement;
 
     /**
      * Get domain object TechnologyCategory by primary key
@@ -48,7 +49,7 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
     public function load($id) {
         //initialize the prepared statement if it is not
         if(!isset($this->_loadStatement)) {
-            $statement = 'SELECT idTechnologyCategory AS id, name, description FROM TechnologyCategory WHERE idTechnologyCategory = :id';
+            $statement = 'SELECT idTechnologyCategory AS id, name, visible, description FROM TechnologyCategory WHERE idTechnologyCategory = :id';
             $this->_loadStatement = Connection::getConnection()->prepare($statement);
         }
 
@@ -62,6 +63,26 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
     }
 
     /**
+     * Select all TechnologyCategory records refering to Technology
+     * @return TechnologyCategory|Array
+     */
+    public function selectByIdTechnology($idTechnology) {
+        //initialize the prepared statement if it is not
+        $result = array();
+        if(!isset($this->_selectAllStatement)) {
+            $statement = 'SELECT idTechnologyCategory AS id, name, visible, description FROM TechnologyCategory NATURAL JOIN Technology WHERE idTechnology = :idTechnology';
+            $this->_selectByIdTechnologyStatement = Connection::getConnection()->prepare($statement);
+        }
+
+        //Get the results as TechnologyCategory instances array and return it
+        $this->_selectByIdTechnologyStatement->execute(array('idTechnology' => $idTechnology));
+        $this->_selectByIdTechnologyStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectByIdTechnologyStatement->fetch())
+            $result[] = new TechnologyCategory($line);
+        return $result;
+    }
+
+    /**
      * Get all records from table TechnologyCategory
      * @return TechnologyCategory|Array
      */
@@ -69,7 +90,7 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
         //initialize the prepared statement if it is not
         $result = array();
         if(!isset($this->_selectAllStatement)) {
-            $statement = 'SELECT idTechnologyCategory AS id, name, description FROM TechnologyCategory';
+            $statement = 'SELECT idTechnologyCategory AS id, name, visible, description FROM TechnologyCategory';
             $this->_selectAllStatement = Connection::getConnection()->prepare($statement);
         }
 
@@ -89,15 +110,15 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
     public function selectAllOrderBy($column) {
         //initialize the prepared statement if it is not
         $result = array();
-        if(!isset($this->_selectAllStatement)) {
-            $statement = 'SELECT idTechnologyCategory AS id, name, description FROM TechnologyCategory ORDER BY '.$column;
-            $this->_selectAllStatement = Connection::getConnection()->prepare($statement);
+        if(!isset($this->_selectAllOrderByStatement)) {
+            $statement = 'SELECT idTechnologyCategory AS id, name, visible, description FROM TechnologyCategory ORDER BY '.$column;
+            $this->_selectAllOrderByStatement = Connection::getConnection()->prepare($statement);
         }
 
         //Get the results as TechnologyCategory instances array and return it
-        $this->_selectAllStatement->execute();
-        $this->_selectAllStatement->setFetchMode(PDO::FETCH_ASSOC);
-        while($line = $this->_selectAllStatement->fetch())
+        $this->_selectAllOrderByStatement->execute();
+        $this->_selectAllOrderByStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectAllOrderByStatement->fetch())
             $result[] = new TechnologyCategory($line);
         return $result;
     }
@@ -123,17 +144,14 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
      */
     public function insert($technologyCategory) {
         //create the statement
-        $attributes = self::check($technologyCategory);
-        $statement = 'INSERT INTO TechnologyCategory(';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[0].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ') VALUES (';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[1].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ')';
-
+        $attributes = $technologyCategory->getNotNullValues();
+        $columns = array();
+        $values = array();
+        foreach($attributes as $key => $value) {
+            $columns[] = $key;
+            $values[] = $value;
+        }
+        $statement = 'INSERT INTO TechnologyCategory('.implode(', ', $columns).') VALUES ('.implode(', ', $values).')';
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
@@ -145,15 +163,47 @@ class TechnologyCategoryDAOImpl implements TechnologyCategoryDAO {
      */
     public function update($technologyCategory) {
         //create the statement
-        $attributes = self::check($technologyCategory);
+        $attributes = $technologyCategory->check();
         $statement = 'UPDATE TechnologyCategory SET ';
         foreach($attributes as &$attribute)
-            $statement .= $attribute[0].' = '.$attribute[1].', ';
+            $statement .= $attribute.getName().' = '.$attribute.getType().', ';
         $statement = rtrim($statement, ', ');
         $statement .= ' WHERE idTechnologyCategory = '.$technologyCategory->getId();
 
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
+    }
+    /**
+    * Update all the records of technologys for the selected technologyCategory
+    * @param TechnologyCategory selected + technologyCategory
+    */
+    public function updateTechnologys($technologyCategory) {
+        //get all the existing records for this technologyCategory
+        $existing = Domain::domainArrayAsIdArray( selectByIdTechnology($technologyCategory->getId()) );
+        $target = Domain::domainArrayAsIdArray( $technologyCategory->getTechnologys);
+
+        //get all records to add as a string : '(idTechnologyCategory, idTechnology), (idTechnologyCategory, idTechnology), ...)'
+        $toAdd = array_diff($target, $existing);
+        foreach($toAdd as &$item) {
+            $item = implode(', ', array($technologyCategory->getId(), $item));
+        }
+        $toAdd = '('.implode('), (', $toAdd).')';
+
+        //prepare statements if not set
+        if( !isset($this->_deleteTechnologyCategoryTechnologyStatement) ) {
+            $cnx = Connection::getConnection();
+
+            //delete statement
+            $statement = 'DELETE * FROM null WHERE idTechnologyCategory = :idTechnologyCategory AND idTechnology NOT IN (:target)';
+            $this->_deleteTechnologyCategoryTechnologysStatement = $cnx->prepareStatement($statement);
+
+            //delete statement
+            $statement = 'INSERT INTO null (idTechnologyCategory, idTechnology) VALUES :insert';
+            $this->_insertTechnologyCategoryTechnologysStatement = $cnx->prepareStatement($statement);
+        }
+
+        $this->_deleteTechnologyCategoryTechnologysStatement->execute( array('target' => implode(', ', $target)) );
+        $this->_insertTechnologyCategoryTechnologysStatement->execute( array('target' => implode(', ', $toAdd)) );
     }
 }

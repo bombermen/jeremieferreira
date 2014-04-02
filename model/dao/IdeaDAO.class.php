@@ -13,6 +13,11 @@ interface IdeaDAO {
      */
     public function load($id);
     /**
+     * Select all Idea records refering to Publication
+     * @return Idea|Array
+     */
+    public function selectByIdPublication($idPublication);
+    /**
      * Get all records from table Idea
      * @return Idea|Array
      */
@@ -38,4 +43,9 @@ interface IdeaDAO {
      * @param Idea $idea primary key
      */
     public function update($idea);
+    /**
+     * Select all Idea records refering to Publication
+     * @return Idea|Array
+     */
+    public function updatePublications($idea);
 }

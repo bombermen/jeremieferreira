@@ -29,6 +29,7 @@
 class LoggerPatternConverterFile extends LoggerPatternConverter {
 
 	public function convert(LoggerLoggingEvent $event) {
-		return $event->getLocationInformation()->getFileName();
+		$filename = explode('\\', $event->getLocationInformation()->getFileName());
+		return end($filename);
 	}
 }

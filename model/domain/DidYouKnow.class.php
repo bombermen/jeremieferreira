@@ -5,40 +5,43 @@
  *
  * @author Jeremie FERREIRA
  */
-class DidYouKnow {
-    /**
-     * @var int
-     */
-    private $_id;
-
+class DidYouKnow extends Domain {
     /**
      * @var string
      */
     private $_knowledge;
 
+    //references
     /**
      * array ctor
      * @param $tab array
      */
     public function DidYouKnow($tab = array()) {
         if(isset($tab)) {
-            if(isset( $tab['id'] )) $this->_id = $tab['id'];
-            if(isset( $tab['knowledge'] )) $this->_knowledge = $tab['knowledge'];
+
+            //optional field id
+            if(isset( $tab['id'] )) {
+                $this->_id = (int)$tab['id'];
+            }
+
+            //required field knowledge
+            if(isset( $tab['knowledge'] )) {
+                $this->_knowledge = (string)$tab['knowledge'];
+            } else {
+                throw new RequiredFieldException('knowledge');
+            }
         }
     }
 
     /**
-     * @return int
+     * Get all the set values
+     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
      */
-    public function getId() {
-        return $this->_id;
-    }
-
-    /**
-     * @param int
-     */
-    public function setId($id) {
-        $this->_id = $id;
+    public function getNotNullValues() {
+        $attributes = array();
+        if( isset( $this->_knowledge ) )
+            $attributes['knowledge'] = '\''.$this->_knowledge.'\'';
+        return $attributes;
     }
 
     /**

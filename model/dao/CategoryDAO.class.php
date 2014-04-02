@@ -13,6 +13,16 @@ interface CategoryDAO {
      */
     public function load($id);
     /**
+     * Select all Category records refering to Category
+     * @return Category|Array
+     */
+    public function selectByIdCategory($idCategory);
+    /**
+     * Select all Category records refering to Publication
+     * @return Category|Array
+     */
+    public function selectByIdPublication($idPublication);
+    /**
      * Get all records from table Category
      * @return Category|Array
      */
@@ -38,4 +48,14 @@ interface CategoryDAO {
      * @param Category $category primary key
      */
     public function update($category);
+    /**
+     * Select all Category records refering to Category
+     * @return Category|Array
+     */
+    public function updateChildren($category);
+    /**
+     * Select all Category records refering to Publication
+     * @return Category|Array
+     */
+    public function updatePublications($category);
 }

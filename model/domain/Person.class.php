@@ -5,12 +5,7 @@
  *
  * @author Jeremie FERREIRA
  */
-class Person {
-    /**
-     * @var int
-     */
-    private $_id;
-
+class Person extends Domain {
     /**
      * @var string
      */
@@ -36,15 +31,13 @@ class Person {
      */
     private $_email;
 
+    //references
     /**
-     * @var string
+     * Publications list.
+     * @see Person->loadPublication to load it
+     * @var int|Array
      */
-    private $_picture;
-
-    /**
-     * @var Publication|Array
-     */
-    private $_publications;
+    private $_publications = array();
 
     /**
      * array ctor
@@ -52,33 +45,71 @@ class Person {
      */
     public function Person($tab = array()) {
         if(isset($tab)) {
-            if(isset( $tab['id'] )) $this->_id = $tab['id'];
-            if(isset( $tab['name'] )) $this->_name = $tab['name'];
-            if(isset( $tab['surname'] )) $this->_surname = $tab['surname'];
+
+            //optional field id
+            if(isset( $tab['id'] )) {
+                $this->_id = (int)$tab['id'];
+            }
+
+            //required field name
+            if(isset( $tab['name'] )) {
+                $this->_name = (string)$tab['name'];
+            } else {
+                throw new RequiredFieldException('name');
+            }
+
+            //required field surname
+            if(isset( $tab['surname'] )) {
+                $this->_surname = (string)$tab['surname'];
+            } else {
+                throw new RequiredFieldException('surname');
+            }
+
+            //required field birthdate
             if(isset( $tab['birthdate'] )) {
                 $this->_birthdate = new DateTime();
                 $this->_birthdate->setTimestamp( $tab['birthdate'] );
+            } else {
+                throw new RequiredFieldException('birthdate');
             }
-            if(isset( $tab['website'] )) $this->_website = $tab['website'];
-            if(isset( $tab['email'] )) $this->_email = $tab['email'];
-            if(isset( $tab['picture'] )) $this->_picture = $tab['picture'];
-            if(isset( $tab['publications'] )) $this->_publications = $tab['publications'];
+
+            //optional field website
+            if(isset( $tab['website'] )) {
+                $this->_website = (string)$tab['website'];
+            }
+
+            //optional field email
+            if(isset( $tab['email'] )) {
+                $this->_email = (string)$tab['email'];
+            }
         }
     }
 
     /**
-     * @return int
+     * Get all the set values
+     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
      */
-    public function getId() {
-        return $this->_id;
+    public function getNotNullValues() {
+        $attributes = array();
+        if( isset( $this->_name ) )
+            $attributes['name'] = '\''.$this->_name.'\'';
+        if( isset( $this->_surname ) )
+            $attributes['surname'] = '\''.$this->_surname.'\'';
+        if( isset( $this->_birthdate ) )
+            $attributes['birthdate'] = 'FROM_UNIXTIME('.$this->_birthdate->getTimestamp().')';
+        if( isset( $this->_website ) )
+            $attributes['website'] = '\''.$this->_website.'\'';
+        if( isset( $this->_email ) )
+            $attributes['email'] = '\''.$this->_email.'\'';
+        return $attributes;
     }
 
     /**
-     * @param int
+     * Load all the publications for this person
      */
-    public function setId($id) {
-        $this->_id = $id;
-    }
+     public function loadPublications() {
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdPerson;
+     }
 
     /**
      * @return string
@@ -151,31 +182,10 @@ class Person {
     }
 
     /**
-     * @return string
+     * @var Publication|Array
      */
-    public function getPicture() {
-        return $this->_picture;
-    }
-
-    /**
-     * @param string
-     */
-    public function setPicture($picture) {
-        $this->_picture = $picture;
-    }
-
-    /**
-     * @return Publication|Array
-     */
-    public function getPublications() {
-        return $this->_publications;
-    }
-
-    /**
-     * @param Publication|Array
-     */
-    public function setPublications($publications) {
-        $this->_publications = $publications;
-    }
+     public function getPublications() {
+         return $this->_publications;
+     }
 
 }

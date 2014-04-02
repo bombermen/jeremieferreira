@@ -26,17 +26,20 @@ class TagDAOImpl implements TagDAO {
      */
     private $_deleteStatement;
 
-    /**
-     * Check all class attributes
-     * Used by insert and update
-     * @param Tag $tag instance to check
-     * @return mixed|Array|Array array of couple (attribute_name - attribute_value) for each not null-value
+    /*
+     * @var PDOStatement
      */
-    private static function check($tag) {
-        $attributes = array();
-        if(!is_null($tag->getname()))
-            $attributes[] = array('name', "'".$tag->getname()."'");
-            return $attributes;    }
+    private $_selectByIdPublicationStatement;
+
+    /*
+     * @var PDOStatement
+     */
+    private $_deleteTagPublicationsStatement;
+
+    /*
+     * @var PDOStatement
+     */
+    private $_insertTagPublicationsStatement;
 
     /**
      * Get domain object Tag by primary key
@@ -56,6 +59,26 @@ class TagDAOImpl implements TagDAO {
         $line = $this->_loadStatement->fetch();
         $this->_loadStatement->closeCursor();
         $result = new Tag($line);
+        return $result;
+    }
+
+    /**
+     * Select all Tag records refering to Publication
+     * @return Tag|Array
+     */
+    public function selectByIdPublication($idPublication) {
+        //initialize the prepared statement if it is not
+        $result = array();
+        if(!isset($this->_selectAllStatement)) {
+            $statement = 'SELECT idTag AS id, name FROM Tag NATURAL JOIN Publication WHERE idPublication = :idPublication';
+            $this->_selectByIdPublicationStatement = Connection::getConnection()->prepare($statement);
+        }
+
+        //Get the results as Tag instances array and return it
+        $this->_selectByIdPublicationStatement->execute(array('idPublication' => $idPublication));
+        $this->_selectByIdPublicationStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectByIdPublicationStatement->fetch())
+            $result[] = new Tag($line);
         return $result;
     }
 
@@ -87,15 +110,15 @@ class TagDAOImpl implements TagDAO {
     public function selectAllOrderBy($column) {
         //initialize the prepared statement if it is not
         $result = array();
-        if(!isset($this->_selectAllStatement)) {
+        if(!isset($this->_selectAllOrderByStatement)) {
             $statement = 'SELECT idTag AS id, name FROM Tag ORDER BY '.$column;
-            $this->_selectAllStatement = Connection::getConnection()->prepare($statement);
+            $this->_selectAllOrderByStatement = Connection::getConnection()->prepare($statement);
         }
 
         //Get the results as Tag instances array and return it
-        $this->_selectAllStatement->execute();
-        $this->_selectAllStatement->setFetchMode(PDO::FETCH_ASSOC);
-        while($line = $this->_selectAllStatement->fetch())
+        $this->_selectAllOrderByStatement->execute();
+        $this->_selectAllOrderByStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectAllOrderByStatement->fetch())
             $result[] = new Tag($line);
         return $result;
     }
@@ -121,17 +144,14 @@ class TagDAOImpl implements TagDAO {
      */
     public function insert($tag) {
         //create the statement
-        $attributes = self::check($tag);
-        $statement = 'INSERT INTO Tag(';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[0].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ') VALUES (';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[1].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ')';
-
+        $attributes = $tag->getNotNullValues();
+        $columns = array();
+        $values = array();
+        foreach($attributes as $key => $value) {
+            $columns[] = $key;
+            $values[] = $value;
+        }
+        $statement = 'INSERT INTO Tag('.implode(', ', $columns).') VALUES ('.implode(', ', $values).')';
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
@@ -143,15 +163,47 @@ class TagDAOImpl implements TagDAO {
      */
     public function update($tag) {
         //create the statement
-        $attributes = self::check($tag);
+        $attributes = $tag->check();
         $statement = 'UPDATE Tag SET ';
         foreach($attributes as &$attribute)
-            $statement .= $attribute[0].' = '.$attribute[1].', ';
+            $statement .= $attribute.getName().' = '.$attribute.getType().', ';
         $statement = rtrim($statement, ', ');
         $statement .= ' WHERE idTag = '.$tag->getId();
 
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
+    }
+    /**
+    * Update all the records of publications for the selected tag
+    * @param Tag selected + tag
+    */
+    public function updatePublications($tag) {
+        //get all the existing records for this tag
+        $existing = Domain::domainArrayAsIdArray( selectByIdPublication($tag->getId()) );
+        $target = Domain::domainArrayAsIdArray( $tag->getPublications);
+
+        //get all records to add as a string : '(idTag, idPublication), (idTag, idPublication), ...)'
+        $toAdd = array_diff($target, $existing);
+        foreach($toAdd as &$item) {
+            $item = implode(', ', array($tag->getId(), $item));
+        }
+        $toAdd = '('.implode('), (', $toAdd).')';
+
+        //prepare statements if not set
+        if( !isset($this->_deleteTagPublicationStatement) ) {
+            $cnx = Connection::getConnection();
+
+            //delete statement
+            $statement = 'DELETE * FROM Publication_has_Tag WHERE idTag = :idTag AND idPublication NOT IN (:target)';
+            $this->_deleteTagPublicationsStatement = $cnx->prepareStatement($statement);
+
+            //delete statement
+            $statement = 'INSERT INTO Publication_has_Tag (idTag, idPublication) VALUES :insert';
+            $this->_insertTagPublicationsStatement = $cnx->prepareStatement($statement);
+        }
+
+        $this->_deleteTagPublicationsStatement->execute( array('target' => implode(', ', $target)) );
+        $this->_insertTagPublicationsStatement->execute( array('target' => implode(', ', $toAdd)) );
     }
 }

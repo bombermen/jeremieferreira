@@ -27,18 +27,6 @@ class StateDAOImpl implements StateDAO {
     private $_deleteStatement;
 
     /**
-     * Check all class attributes
-     * Used by insert and update
-     * @param State $state instance to check
-     * @return mixed|Array|Array array of couple (attribute_name - attribute_value) for each not null-value
-     */
-    private static function check($state) {
-        $attributes = array();
-        if(!is_null($state->getname()))
-            $attributes[] = array('name', "'".$state->getname()."'");
-            return $attributes;    }
-
-    /**
      * Get domain object State by primary key
      * @param int $id primary key
      * @return State
@@ -87,15 +75,15 @@ class StateDAOImpl implements StateDAO {
     public function selectAllOrderBy($column) {
         //initialize the prepared statement if it is not
         $result = array();
-        if(!isset($this->_selectAllStatement)) {
+        if(!isset($this->_selectAllOrderByStatement)) {
             $statement = 'SELECT idState AS id, name FROM State ORDER BY '.$column;
-            $this->_selectAllStatement = Connection::getConnection()->prepare($statement);
+            $this->_selectAllOrderByStatement = Connection::getConnection()->prepare($statement);
         }
 
         //Get the results as State instances array and return it
-        $this->_selectAllStatement->execute();
-        $this->_selectAllStatement->setFetchMode(PDO::FETCH_ASSOC);
-        while($line = $this->_selectAllStatement->fetch())
+        $this->_selectAllOrderByStatement->execute();
+        $this->_selectAllOrderByStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectAllOrderByStatement->fetch())
             $result[] = new State($line);
         return $result;
     }
@@ -121,17 +109,14 @@ class StateDAOImpl implements StateDAO {
      */
     public function insert($state) {
         //create the statement
-        $attributes = self::check($state);
-        $statement = 'INSERT INTO State(';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[0].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ') VALUES (';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[1].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ')';
-
+        $attributes = $state->getNotNullValues();
+        $columns = array();
+        $values = array();
+        foreach($attributes as $key => $value) {
+            $columns[] = $key;
+            $values[] = $value;
+        }
+        $statement = 'INSERT INTO State('.implode(', ', $columns).') VALUES ('.implode(', ', $values).')';
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
@@ -143,10 +128,10 @@ class StateDAOImpl implements StateDAO {
      */
     public function update($state) {
         //create the statement
-        $attributes = self::check($state);
+        $attributes = $state->check();
         $statement = 'UPDATE State SET ';
         foreach($attributes as &$attribute)
-            $statement .= $attribute[0].' = '.$attribute[1].', ';
+            $statement .= $attribute.getName().' = '.$attribute.getType().', ';
         $statement = rtrim($statement, ', ');
         $statement .= ' WHERE idState = '.$state->getId();
 

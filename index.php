@@ -23,9 +23,16 @@ and open the template in the editor.
         ?>
         
         <?php
-        var_dump(DAOFactory::getPersonDAO()->load(1));
-        var_dump(DAOFactory::getPersonDAO()->load(3));
+        $file = '/fdsfds/wbcbw/sdfs.g';
+        $file = explode('/', $file);
+        echo end($file);
+        $d = new DateTime();
+        $person = new Person(array('name' => 'John Jacob', 'surname' => 'Doe', 'birthdate' => $d->getTimestamp()));
         
+        DAOFactory::getPersonDAO()->insert($person);
+        $persons = DAOFactory::getPersonDAO()->selectAll();
+        
+        var_dump($persons);
         ?>
     </body>
 </html>

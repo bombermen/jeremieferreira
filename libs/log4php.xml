@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns="http://logging.apache.org/log4php/">
-	<appender name="default" class="LoggerAppenderFile">
-		<layout class="LoggerLayoutSimple" />
-		<param name="file" value="logs/log.log" />
+
+	<appender name="daily" class="LoggerAppenderDailyFile">
+		 <layout class="LoggerLayoutPattern">
+			<param name="conversionPattern" value="%d{H:i:s} [%level] in %file method:%method l:%line : %message%newline" />
+		</layout>
 		<param name="append" value="true" />
+		<param name="file" value="logs/%s.log" />
+		<param name="datePattern" value="Y-m-d" />
 	</appender>
+
 	<root>
-		<level value="debug" />
-		<appender_ref ref="default" />
+		<level value="DEBUG" />
+		<appender_ref ref="daily" />
 	</root>
 </configuration>

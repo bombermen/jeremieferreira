@@ -10,9 +10,9 @@ class Connection {
     
     public function __construct() { }
     
-    const USER = 'root';
+    const USER = 'admin';
     const HOST = 'localhost';
-    const PWD = '';
+    const PWD = 'H0n0Lulu43v3r';
     const DB = 'jeremieferreira';
     
     /**
@@ -24,15 +24,20 @@ class Connection {
         {
             try
             {
-                self::$_instance = new PDO('mysql:host='.self::HOST.
+                $pdo = new PDO('mysql:host='.self::HOST.
                                             ';dbname='.self::DB,
                                             self::USER,
                                             self::PWD,
                                             array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
                 
+                //show query error
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                
+                self::$_instance = $pdo;
             } catch (Exception $ex) {
-                $logger = Logger::getLogger();
-                $logger->error($ex->getCode().':'.$ex->getMessage());
+                $logger = Logger::getLogger('debug');
+                $logger->error($ex->getMessage());
                 die();
             }
         }   

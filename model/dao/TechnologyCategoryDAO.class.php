@@ -13,6 +13,11 @@ interface TechnologyCategoryDAO {
      */
     public function load($id);
     /**
+     * Select all TechnologyCategory records refering to Technology
+     * @return TechnologyCategory|Array
+     */
+    public function selectByIdTechnology($idTechnology);
+    /**
      * Get all records from table TechnologyCategory
      * @return TechnologyCategory|Array
      */
@@ -38,4 +43,9 @@ interface TechnologyCategoryDAO {
      * @param TechnologyCategory $technologyCategory primary key
      */
     public function update($technologyCategory);
+    /**
+     * Select all TechnologyCategory records refering to Technology
+     * @return TechnologyCategory|Array
+     */
+    public function updateTechnologys($technologyCategory);
 }

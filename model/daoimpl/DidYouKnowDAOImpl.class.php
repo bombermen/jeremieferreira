@@ -27,18 +27,6 @@ class DidYouKnowDAOImpl implements DidYouKnowDAO {
     private $_deleteStatement;
 
     /**
-     * Check all class attributes
-     * Used by insert and update
-     * @param DidYouKnow $didYouKnow instance to check
-     * @return mixed|Array|Array array of couple (attribute_name - attribute_value) for each not null-value
-     */
-    private static function check($didYouKnow) {
-        $attributes = array();
-        if(!is_null($didYouKnow->getknowledge()))
-            $attributes[] = array('knowledge', "'".$didYouKnow->getknowledge()."'");
-            return $attributes;    }
-
-    /**
      * Get domain object DidYouKnow by primary key
      * @param int $id primary key
      * @return DidYouKnow
@@ -87,15 +75,15 @@ class DidYouKnowDAOImpl implements DidYouKnowDAO {
     public function selectAllOrderBy($column) {
         //initialize the prepared statement if it is not
         $result = array();
-        if(!isset($this->_selectAllStatement)) {
+        if(!isset($this->_selectAllOrderByStatement)) {
             $statement = 'SELECT idDidYouKnow AS id, knowledge FROM DidYouKnow ORDER BY '.$column;
-            $this->_selectAllStatement = Connection::getConnection()->prepare($statement);
+            $this->_selectAllOrderByStatement = Connection::getConnection()->prepare($statement);
         }
 
         //Get the results as DidYouKnow instances array and return it
-        $this->_selectAllStatement->execute();
-        $this->_selectAllStatement->setFetchMode(PDO::FETCH_ASSOC);
-        while($line = $this->_selectAllStatement->fetch())
+        $this->_selectAllOrderByStatement->execute();
+        $this->_selectAllOrderByStatement->setFetchMode(PDO::FETCH_ASSOC);
+        while($line = $this->_selectAllOrderByStatement->fetch())
             $result[] = new DidYouKnow($line);
         return $result;
     }
@@ -121,17 +109,14 @@ class DidYouKnowDAOImpl implements DidYouKnowDAO {
      */
     public function insert($didYouKnow) {
         //create the statement
-        $attributes = self::check($didYouKnow);
-        $statement = 'INSERT INTO DidYouKnow(';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[0].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ') VALUES (';
-        foreach($attributes as &$attribute)
-            $statement .= $attribute[1].', ';
-        $statement = rtrim($statement, ', ');
-        $statement .= ')';
-
+        $attributes = $didYouKnow->getNotNullValues();
+        $columns = array();
+        $values = array();
+        foreach($attributes as $key => $value) {
+            $columns[] = $key;
+            $values[] = $value;
+        }
+        $statement = 'INSERT INTO DidYouKnow('.implode(', ', $columns).') VALUES ('.implode(', ', $values).')';
         //prepare and execute the statement
         $query = Connection::getConnection()->prepare($statement);
         $query->execute();
@@ -143,10 +128,10 @@ class DidYouKnowDAOImpl implements DidYouKnowDAO {
      */
     public function update($didYouKnow) {
         //create the statement
-        $attributes = self::check($didYouKnow);
+        $attributes = $didYouKnow->check();
         $statement = 'UPDATE DidYouKnow SET ';
         foreach($attributes as &$attribute)
-            $statement .= $attribute[0].' = '.$attribute[1].', ';
+            $statement .= $attribute.getName().' = '.$attribute.getType().', ';
         $statement = rtrim($statement, ', ');
         $statement .= ' WHERE idDidYouKnow = '.$didYouKnow->getId();
 

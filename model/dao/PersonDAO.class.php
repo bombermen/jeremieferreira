@@ -13,6 +13,11 @@ interface PersonDAO {
      */
     public function load($id);
     /**
+     * Select all Person records refering to Publication
+     * @return Person|Array
+     */
+    public function selectByIdPublication($idPublication);
+    /**
      * Get all records from table Person
      * @return Person|Array
      */
@@ -38,4 +43,9 @@ interface PersonDAO {
      * @param Person $person primary key
      */
     public function update($person);
+    /**
+     * Select all Person records refering to Publication
+     * @return Person|Array
+     */
+    public function updatePublications($person);
 }

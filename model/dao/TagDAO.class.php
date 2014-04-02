@@ -13,6 +13,11 @@ interface TagDAO {
      */
     public function load($id);
     /**
+     * Select all Tag records refering to Publication
+     * @return Tag|Array
+     */
+    public function selectByIdPublication($idPublication);
+    /**
      * Get all records from table Tag
      * @return Tag|Array
      */
@@ -38,4 +43,9 @@ interface TagDAO {
      * @param Tag $tag primary key
      */
     public function update($tag);
+    /**
+     * Select all Tag records refering to Publication
+     * @return Tag|Array
+     */
+    public function updatePublications($tag);
 }

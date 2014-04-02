@@ -13,6 +13,26 @@ interface PublicationDAO {
      */
     public function load($id);
     /**
+     * Select all Publication records refering to Person
+     * @return Publication|Array
+     */
+    public function selectByIdPerson($idPerson);
+    /**
+     * Select all Publication records refering to Idea
+     * @return Publication|Array
+     */
+    public function selectByIdIdea($idIdea);
+    /**
+     * Select all Publication records refering to Technology
+     * @return Publication|Array
+     */
+    public function selectByIdTechnology($idTechnology);
+    /**
+     * Select all Publication records refering to Tag
+     * @return Publication|Array
+     */
+    public function selectByIdTag($idTag);
+    /**
      * Get all records from table Publication
      * @return Publication|Array
      */
@@ -38,4 +58,24 @@ interface PublicationDAO {
      * @param Publication $publication primary key
      */
     public function update($publication);
+    /**
+     * Select all Publication records refering to Person
+     * @return Publication|Array
+     */
+    public function updatePersons($publication);
+    /**
+     * Select all Publication records refering to Idea
+     * @return Publication|Array
+     */
+    public function updateIdeas($publication);
+    /**
+     * Select all Publication records refering to Technology
+     * @return Publication|Array
+     */
+    public function updateTechnologies($publication);
+    /**
+     * Select all Publication records refering to Tag
+     * @return Publication|Array
+     */
+    public function updateTags($publication);
 }

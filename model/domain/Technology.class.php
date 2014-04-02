@@ -5,21 +5,24 @@
  *
  * @author Jeremie FERREIRA
  */
-class Technology {
-    /**
-     * @var int
-     */
-    private $_id;
-
+class Technology extends Domain {
     /**
      * @var string
      */
     private $_name;
 
     /**
-     * @var TechnologyCategory
+     * @var string
      */
-    private $_category;
+    private $_description;
+
+    //references
+    /**
+     * Publications list.
+     * @see Technology->loadPublication to load it
+     * @var int|Array
+     */
+    private $_publications = array();
 
     /**
      * array ctor
@@ -27,25 +30,45 @@ class Technology {
      */
     public function Technology($tab = array()) {
         if(isset($tab)) {
-            if(isset( $tab['id'] )) $this->_id = $tab['id'];
-            if(isset( $tab['name'] )) $this->_name = $tab['name'];
-            if(isset( $tab['category'] )) $this->_category = $tab['category'];
+
+            //optional field id
+            if(isset( $tab['id'] )) {
+                $this->_id = (int)$tab['id'];
+            }
+
+            //required field name
+            if(isset( $tab['name'] )) {
+                $this->_name = (string)$tab['name'];
+            } else {
+                throw new RequiredFieldException('name');
+            }
+
+            //optional field description
+            if(isset( $tab['description'] )) {
+                $this->_description = (string)$tab['description'];
+            }
         }
     }
 
     /**
-     * @return int
+     * Get all the set values
+     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
      */
-    public function getId() {
-        return $this->_id;
+    public function getNotNullValues() {
+        $attributes = array();
+        if( isset( $this->_name ) )
+            $attributes['name'] = '\''.$this->_name.'\'';
+        if( isset( $this->_description ) )
+            $attributes['description'] = '\''.$this->_description.'\'';
+        return $attributes;
     }
 
     /**
-     * @param int
+     * Load all the publications for this technology
      */
-    public function setId($id) {
-        $this->_id = $id;
-    }
+     public function loadPublications() {
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdTechnology;
+     }
 
     /**
      * @return string
@@ -62,17 +85,38 @@ class Technology {
     }
 
     /**
-     * @return TechnologyCategory
+     * @return string
      */
-    public function getCategory() {
-        return $this->_category;
+    public function getDescription() {
+        return $this->_description;
     }
 
     /**
-     * @param TechnologyCategory
+     * @param string
      */
-    public function setCategory($category) {
-        $this->_category = $category;
+    public function setDescription($description) {
+        $this->_description = $description;
     }
+
+    /**
+     * @var TechnologyCategory
+     */
+     public function getTechnologyCategory() {
+         return $this->_technologyCategory;
+     }
+
+    /**
+     * @param int
+     */
+     public function setTechnologyCategory($idTechnologyCategory) {
+         $this->_technologyCategory = DAOFactory::getTechnologyCategoryDAO()->load($idTechnologyCategory);
+     }
+
+    /**
+     * @var Publication|Array
+     */
+     public function getPublications() {
+         return $this->_publications;
+     }
 
 }
