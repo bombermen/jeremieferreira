@@ -18,57 +18,83 @@ class Technology extends Domain {
 
     //references
     /**
-     * Publications list.
-     * @see Technology->loadPublication to load it
-     * @var int|Array
+     * This Technology's Publications list
+     * @see loadPublications() to load it
+     * @var Publication|Array
      */
     private $_publications = array();
 
     /**
-     * array ctor
-     * @param $tab array
+     * This Technology's TechnologyCategory
+     * @var TechnologyCategory
      */
-    public function Technology($tab = array()) {
-        if(isset($tab)) {
+    private $_technologyCategory;
 
-            //optional field id
-            if(isset( $tab['id'] )) {
-                $this->_id = (int)$tab['id'];
-            }
+    /**
+     * explicit ctor
+     * @param $id           Technology's id              (required)
+     * @param $name         Technology's name            (required)
+     * @param $technologyCategory Technology's technologyCategory (required)
+     * @param $description  Technology's description     (optional)
+     * @param $publications Technology's publications    (optional)
+     */
+     public function Technology($id, $name, $technologyCategory, $description = null, $publications = null) {
 
-            //required field name
-            if(isset( $tab['name'] )) {
-                $this->_name = (string)$tab['name'];
-            } else {
-                throw new RequiredFieldException('name');
-            }
-
-            //optional field description
-            if(isset( $tab['description'] )) {
-                $this->_description = (string)$tab['description'];
-            }
-        }
+        $this->_id = $id;
+        $this->_name = $name;
+        $this->_description = $description;
+        $this->_publications = $publications;
+        $this->_technologyCategory = $technologyCategory;
     }
 
     /**
-     * Get all the set values
-     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
+     * Array ctor
+     * @param $tab array
+     * @return Technology
+     * @throws RequiredFieldException if one or more required field are not set in the array
+     * @see Technology() for more information about required fields
      */
-    public function getNotNullValues() {
-        $attributes = array();
-        if( isset( $this->_name ) )
-            $attributes['name'] = '\''.$this->_name.'\'';
-        if( isset( $this->_description ) )
-            $attributes['description'] = '\''.$this->_description.'\'';
-        return $attributes;
+    public static function parseArray($tab = array()) {
+        if(isset($tab)) {
+            //set all temporary attributes to null
+            $id = null;
+            $name = null;
+            $technologyCategory = null;
+            $description = null;
+            $publications = null;
+
+            //required field id
+            if( isset( $tab['id'] ) ) $id = $tab['id'];
+            else throw new RequiredFieldException('id');
+
+            //required field name
+            if( isset( $tab['name'] ) ) $name = $tab['name'];
+            else throw new RequiredFieldException('name');
+
+            //optional field description
+            if( isset( $tab['description'] ) ) $description = $tab['description'];
+
+            if( isset( $tab['technologyCategory'] ) && Utilities::is_integer($tab['technologyCategory']) )
+                $technologyCategory = DAOFactory::getTechnologyCategoryDAO()->load($tab['technologyCategory']);
+            else throw new RequiredFieldException('technologyCategory');
+
+            return new Technology($id, $name, $technologyCategory, $description, $publications);
+        }
     }
 
     /**
      * Load all the publications for this technology
      */
      public function loadPublications() {
-         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdTechnology;
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdTechnology($this->_id);
      }
+
+    /**
+     * Update this Technology publications in db
+     */
+    public function updatePublications() {
+        DAOFactory::getTechnologyDAO()->updatePublications($this);
+    }
 
     /**
      * @return string
@@ -99,7 +125,7 @@ class Technology extends Domain {
     }
 
     /**
-     * @var TechnologyCategory
+     * @return TechnologyCategory
      */
      public function getTechnologyCategory() {
          return $this->_technologyCategory;
@@ -113,10 +139,17 @@ class Technology extends Domain {
      }
 
     /**
-     * @var Publication|Array
+     * @return Publication|Array
      */
      public function getPublications() {
          return $this->_publications;
+     }
+
+    /**
+     * @param Publication|Array
+     */
+     public function setPublications($publications) {
+         return $this->_publications = $publications;
      }
 
 }

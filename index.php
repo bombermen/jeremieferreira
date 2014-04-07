@@ -10,7 +10,6 @@ and open the template in the editor.
         <title></title>
     </head>
     <body>
-        
         <!-- log4php -->
         <?php
             include('libs/log4php/Logger.php');
@@ -23,16 +22,7 @@ and open the template in the editor.
         ?>
         
         <?php
-        $file = '/fdsfds/wbcbw/sdfs.g';
-        $file = explode('/', $file);
-        echo end($file);
-        $d = new DateTime();
-        $person = new Person(array('name' => 'John Jacob', 'surname' => 'Doe', 'birthdate' => $d->getTimestamp()));
         
-        DAOFactory::getPersonDAO()->insert($person);
-        $persons = DAOFactory::getPersonDAO()->selectAll();
-        
-        var_dump($persons);
         ?>
     </body>
 </html>

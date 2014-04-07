@@ -11,37 +11,40 @@ class DidYouKnow extends Domain {
      */
     private $_knowledge;
 
-    //references
     /**
-     * array ctor
-     * @param $tab array
+     * explicit ctor
+     * @param $id           DidYouKnow's id              (required)
+     * @param $knowledge    DidYouKnow's knowledge       (required)
      */
-    public function DidYouKnow($tab = array()) {
-        if(isset($tab)) {
+     public function DidYouKnow($id, $knowledge) {
 
-            //optional field id
-            if(isset( $tab['id'] )) {
-                $this->_id = (int)$tab['id'];
-            }
-
-            //required field knowledge
-            if(isset( $tab['knowledge'] )) {
-                $this->_knowledge = (string)$tab['knowledge'];
-            } else {
-                throw new RequiredFieldException('knowledge');
-            }
-        }
+        $this->_id = $id;
+        $this->_knowledge = $knowledge;
     }
 
     /**
-     * Get all the set values
-     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
+     * Array ctor
+     * @param $tab array
+     * @return DidYouKnow
+     * @throws RequiredFieldException if one or more required field are not set in the array
+     * @see DidYouKnow() for more information about required fields
      */
-    public function getNotNullValues() {
-        $attributes = array();
-        if( isset( $this->_knowledge ) )
-            $attributes['knowledge'] = '\''.$this->_knowledge.'\'';
-        return $attributes;
+    public static function parseArray($tab = array()) {
+        if(isset($tab)) {
+            //set all temporary attributes to null
+            $id = null;
+            $knowledge = null;
+
+            //required field id
+            if( isset( $tab['id'] ) ) $id = $tab['id'];
+            else throw new RequiredFieldException('id');
+
+            //required field knowledge
+            if( isset( $tab['knowledge'] ) ) $knowledge = $tab['knowledge'];
+            else throw new RequiredFieldException('knowledge');
+
+            return new DidYouKnow($id, $knowledge);
+        }
     }
 
     /**

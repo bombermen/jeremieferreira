@@ -7,66 +7,66 @@
  */
 class DAOFactory {
     /**
-     * @return PersonDAOImpl
+     * @return PersonDAO
      */
     public static function getPersonDAO() {
-        return new PersonDAOImpl();
+        return new PersonDAO();
     }
 
     /**
-     * @return PublicationDAOImpl
+     * @return PublicationDAO
      */
     public static function getPublicationDAO() {
-        return new PublicationDAOImpl();
+        return new PublicationDAO();
     }
 
     /**
-     * @return IdeaDAOImpl
+     * @return IdeaDAO
      */
     public static function getIdeaDAO() {
-        return new IdeaDAOImpl();
+        return new IdeaDAO();
     }
 
     /**
-     * @return CategoryDAOImpl
+     * @return CategoryDAO
      */
     public static function getCategoryDAO() {
-        return new CategoryDAOImpl();
+        return new CategoryDAO();
     }
 
     /**
-     * @return TechnologyDAOImpl
+     * @return TechnologyDAO
      */
     public static function getTechnologyDAO() {
-        return new TechnologyDAOImpl();
+        return new TechnologyDAO();
     }
 
     /**
-     * @return TechnologyCategoryDAOImpl
+     * @return TechnologyCategoryDAO
      */
     public static function getTechnologyCategoryDAO() {
-        return new TechnologyCategoryDAOImpl();
+        return new TechnologyCategoryDAO();
     }
 
     /**
-     * @return TagDAOImpl
+     * @return TagDAO
      */
     public static function getTagDAO() {
-        return new TagDAOImpl();
+        return new TagDAO();
     }
 
     /**
-     * @return StateDAOImpl
+     * @return StateDAO
      */
     public static function getStateDAO() {
-        return new StateDAOImpl();
+        return new StateDAO();
     }
 
     /**
-     * @return DidYouKnowDAOImpl
+     * @return DidYouKnowDAO
      */
     public static function getDidYouKnowDAO() {
-        return new DidYouKnowDAOImpl();
+        return new DidYouKnowDAO();
     }
 
 }

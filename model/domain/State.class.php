@@ -13,36 +13,57 @@ class State extends Domain {
 
     //references
     /**
-     * array ctor
-     * @param $tab array
+     * This State's Publications list
+     * @see loadPublications() to load it
+     * @var Publication|Array
      */
-    public function State($tab = array()) {
-        if(isset($tab)) {
+    private $_publications = array();
 
-            //optional field id
-            if(isset( $tab['id'] )) {
-                $this->_id = (int)$tab['id'];
-            }
+    /**
+     * explicit ctor
+     * @param $id           State's id                   (required)
+     * @param $name         State's name                 (required)
+     * @param $publications State's publications         (optional)
+     */
+     public function State($id, $name, $publications = null) {
+
+        $this->_id = $id;
+        $this->_name = $name;
+        $this->_publications = $publications;
+    }
+
+    /**
+     * Array ctor
+     * @param $tab array
+     * @return State
+     * @throws RequiredFieldException if one or more required field are not set in the array
+     * @see State() for more information about required fields
+     */
+    public static function parseArray($tab = array()) {
+        if(isset($tab)) {
+            //set all temporary attributes to null
+            $id = null;
+            $name = null;
+            $publications = null;
+
+            //required field id
+            if( isset( $tab['id'] ) ) $id = $tab['id'];
+            else throw new RequiredFieldException('id');
 
             //required field name
-            if(isset( $tab['name'] )) {
-                $this->_name = (string)$tab['name'];
-            } else {
-                throw new RequiredFieldException('name');
-            }
+            if( isset( $tab['name'] ) ) $name = $tab['name'];
+            else throw new RequiredFieldException('name');
+
+            return new State($id, $name, $publications);
         }
     }
 
     /**
-     * Get all the set values
-     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
+     * Load all the publications for this state
      */
-    public function getNotNullValues() {
-        $attributes = array();
-        if( isset( $this->_name ) )
-            $attributes['name'] = '\''.$this->_name.'\'';
-        return $attributes;
-    }
+     public function loadPublications() {
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdState($this->_id);
+     }
 
     /**
      * @return string
@@ -59,17 +80,17 @@ class State extends Domain {
     }
 
     /**
-     * @var State
+     * @return Publication|Array
      */
-     public function getPublication() {
-         return $this->_publication;
+     public function getPublications() {
+         return $this->_publications;
      }
 
     /**
-     * @param int
+     * @param Publication|Array
      */
-     public function setState($idState) {
-         $this->_publication = DAOFactory::getStateDAO()->load($idState);
+     public function setPublications($publications) {
+         return $this->_publications = $publications;
      }
 
 }

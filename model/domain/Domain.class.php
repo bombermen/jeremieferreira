@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Description of RequiredFieldException
+ * Description of Domain
  *
  * @author Jeremie Ferreira
  */
-class Domain {
+abstract class Domain {
     
     /**
      * @var int 

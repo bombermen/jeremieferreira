@@ -33,83 +33,94 @@ class Person extends Domain {
 
     //references
     /**
-     * Publications list.
-     * @see Person->loadPublication to load it
-     * @var int|Array
+     * This Person's Publications list
+     * @see loadPublications() to load it
+     * @var Publication|Array
      */
     private $_publications = array();
 
     /**
-     * array ctor
-     * @param $tab array
+     * explicit ctor
+     * @param $id           Person's id                  (required)
+     * @param $name         Person's name                (required)
+     * @param $surname      Person's surname             (required)
+     * @param $birthdate    Person's birthdate           (required)
+     * @param $website      Person's website             (optional)
+     * @param $email        Person's email               (optional)
+     * @param $publications Person's publications        (optional)
      */
-    public function Person($tab = array()) {
-        if(isset($tab)) {
+     public function Person($id, $name, $surname, $birthdate, $website = null, $email = null, $publications = null) {
 
-            //optional field id
-            if(isset( $tab['id'] )) {
-                $this->_id = (int)$tab['id'];
-            }
-
-            //required field name
-            if(isset( $tab['name'] )) {
-                $this->_name = (string)$tab['name'];
-            } else {
-                throw new RequiredFieldException('name');
-            }
-
-            //required field surname
-            if(isset( $tab['surname'] )) {
-                $this->_surname = (string)$tab['surname'];
-            } else {
-                throw new RequiredFieldException('surname');
-            }
-
-            //required field birthdate
-            if(isset( $tab['birthdate'] )) {
-                $this->_birthdate = new DateTime();
-                $this->_birthdate->setTimestamp( $tab['birthdate'] );
-            } else {
-                throw new RequiredFieldException('birthdate');
-            }
-
-            //optional field website
-            if(isset( $tab['website'] )) {
-                $this->_website = (string)$tab['website'];
-            }
-
-            //optional field email
-            if(isset( $tab['email'] )) {
-                $this->_email = (string)$tab['email'];
-            }
-        }
+        $this->_id = $id;
+        $this->_name = $name;
+        $this->_surname = $surname;
+        $this->_birthdate = $birthdate;
+        $this->_website = $website;
+        $this->_email = $email;
+        $this->_publications = $publications;
     }
 
     /**
-     * Get all the set values
-     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
+     * Array ctor
+     * @param $tab array
+     * @return Person
+     * @throws RequiredFieldException if one or more required field are not set in the array
+     * @see Person() for more information about required fields
      */
-    public function getNotNullValues() {
-        $attributes = array();
-        if( isset( $this->_name ) )
-            $attributes['name'] = '\''.$this->_name.'\'';
-        if( isset( $this->_surname ) )
-            $attributes['surname'] = '\''.$this->_surname.'\'';
-        if( isset( $this->_birthdate ) )
-            $attributes['birthdate'] = 'FROM_UNIXTIME('.$this->_birthdate->getTimestamp().')';
-        if( isset( $this->_website ) )
-            $attributes['website'] = '\''.$this->_website.'\'';
-        if( isset( $this->_email ) )
-            $attributes['email'] = '\''.$this->_email.'\'';
-        return $attributes;
+    public static function parseArray($tab = array()) {
+        if(isset($tab)) {
+            //set all temporary attributes to null
+            $id = null;
+            $name = null;
+            $surname = null;
+            $birthdate = null;
+            $website = null;
+            $email = null;
+            $publications = null;
+
+            //required field id
+            if( isset( $tab['id'] ) ) $id = $tab['id'];
+            else throw new RequiredFieldException('id');
+
+            //required field name
+            if( isset( $tab['name'] ) ) $name = $tab['name'];
+            else throw new RequiredFieldException('name');
+
+            //required field surname
+            if( isset( $tab['surname'] ) ) $surname = $tab['surname'];
+            else throw new RequiredFieldException('surname');
+
+            //required field birthdate
+            if( isset( $tab['birthdate'] ) && Utilities::is_integer($tab['birthdate']) ) {
+                $birthdate = new DateTime();
+                $birthdate->setTimestamp( $tab['birthdate'] );
+            }
+
+            else throw new RequiredFieldException('birthdate');
+
+            //optional field website
+            if( isset( $tab['website'] ) ) $website = $tab['website'];
+
+            //optional field email
+            if( isset( $tab['email'] ) ) $email = $tab['email'];
+
+            return new Person($id, $name, $surname, $birthdate, $website, $email, $publications);
+        }
     }
 
     /**
      * Load all the publications for this person
      */
      public function loadPublications() {
-         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdPerson;
+         $this->_publications = DAOFactory::getPublicationDAO()->selectByIdPerson($this->_id);
      }
+
+    /**
+     * Update this Person publications in db
+     */
+    public function updatePublications() {
+        DAOFactory::getPersonDAO()->updatePublications($this);
+    }
 
     /**
      * @return string
@@ -182,10 +193,17 @@ class Person extends Domain {
     }
 
     /**
-     * @var Publication|Array
+     * @return Publication|Array
      */
      public function getPublications() {
          return $this->_publications;
+     }
+
+    /**
+     * @param Publication|Array
+     */
+     public function setPublications($publications) {
+         return $this->_publications = $publications;
      }
 
 }

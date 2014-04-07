@@ -28,116 +28,182 @@ class Publication extends Domain {
 
     //references
     /**
-     * Persons list.
-     * @see Publication->loadPerson to load it
-     * @var int|Array
+     * This Publication's Persons list
+     * @see loadPersons() to load it
+     * @var Person|Array
      */
     private $_persons = array();
 
     /**
-     * Ideas list.
-     * @var int|Array
+     * This Publication's Ideas list
+     * @see loadIdeas() to load it
+     * @var Idea|Array
      */
     private $_ideas = array();
 
     /**
-     * Technologies list.
-     * @see Publication->loadTechnology to load it
-     * @var int|Array
+     * This Publication's Technologies list
+     * @see loadTechnologies() to load it
+     * @var Technology|Array
      */
     private $_technologies = array();
 
     /**
-     * Tags list.
-     * @see Publication->loadTag to load it
-     * @var int|Array
+     * This Publication's Tags list
+     * @see loadTags() to load it
+     * @var Tag|Array
      */
     private $_tags = array();
 
     /**
-     * array ctor
-     * @param $tab array
+     * This Publication's Category
+     * @var Category
      */
-    public function Publication($tab = array()) {
-        if(isset($tab)) {
+    private $_category;
 
-            //optional field id
-            if(isset( $tab['id'] )) {
-                $this->_id = (int)$tab['id'];
-            }
+    /**
+     * This Publication's State
+     * @var State
+     */
+    private $_state;
 
-            //required field title
-            if(isset( $tab['title'] )) {
-                $this->_title = (string)$tab['title'];
-            } else {
-                throw new RequiredFieldException('title');
-            }
+    /**
+     * explicit ctor
+     * @param $id           Publication's id             (required)
+     * @param $title        Publication's title          (required)
+     * @param $shortDescription Publication's shortDescription (required)
+     * @param $visits       Publication's visits         (required)
+     * @param $category     Publication's category       (required)
+     * @param $state        Publication's state          (required)
+     * @param $sourcesUrl   Publication's sourcesUrl     (optional)
+     * @param $persons      Publication's persons        (optional)
+     * @param $ideas        Publication's ideas          (optional)
+     * @param $technologies Publication's technologies   (optional)
+     * @param $tags         Publication's tags           (optional)
+     */
+     public function Publication($id, $title, $shortDescription, $visits, $category, $state, $sourcesUrl = null, $persons = null, $ideas = null, $technologies = null, $tags = null) {
 
-            //required field shortDescription
-            if(isset( $tab['shortDescription'] )) {
-                $this->_shortDescription = (string)$tab['shortDescription'];
-            } else {
-                throw new RequiredFieldException('shortDescription');
-            }
-
-            //optional field sourcesUrl
-            if(isset( $tab['sourcesUrl'] )) {
-                $this->_sourcesUrl = (string)$tab['sourcesUrl'];
-            }
-
-            //required field visits
-            if(isset( $tab['visits'] )) {
-                $this->_visits = (int)$tab['visits'];
-            } else {
-                throw new RequiredFieldException('visits');
-            }
-        }
+        $this->_id = $id;
+        $this->_title = $title;
+        $this->_shortDescription = $shortDescription;
+        $this->_sourcesUrl = $sourcesUrl;
+        $this->_visits = $visits;
+        $this->_persons = $persons;
+        $this->_ideas = $ideas;
+        $this->_technologies = $technologies;
+        $this->_tags = $tags;
+        $this->_category = $category;
+        $this->_state = $state;
     }
 
     /**
-     * Get all the set values
-     * @return Array array of couple (attribute_name => attribute_value) for each not null-value
+     * Array ctor
+     * @param $tab array
+     * @return Publication
+     * @throws RequiredFieldException if one or more required field are not set in the array
+     * @see Publication() for more information about required fields
      */
-    public function getNotNullValues() {
-        $attributes = array();
-        if( isset( $this->_title ) )
-            $attributes['title'] = '\''.$this->_title.'\'';
-        if( isset( $this->_shortDescription ) )
-            $attributes['shortDescription'] = '\''.$this->_shortDescription.'\'';
-        if( isset( $this->_sourcesUrl ) )
-            $attributes['sourcesUrl'] = '\''.$this->_sourcesUrl.'\'';
-        if( isset( $this->_visits ) )
-            $attributes['visits'] = $this->_visits;
-        return $attributes;
+    public static function parseArray($tab = array()) {
+        if(isset($tab)) {
+            //set all temporary attributes to null
+            $id = null;
+            $title = null;
+            $shortDescription = null;
+            $visits = null;
+            $category = null;
+            $state = null;
+            $sourcesUrl = null;
+            $persons = null;
+            $ideas = null;
+            $technologies = null;
+            $tags = null;
+
+            //required field id
+            if( isset( $tab['id'] ) ) $id = $tab['id'];
+            else throw new RequiredFieldException('id');
+
+            //required field title
+            if( isset( $tab['title'] ) ) $title = $tab['title'];
+            else throw new RequiredFieldException('title');
+
+            //required field shortDescription
+            if( isset( $tab['shortDescription'] ) ) $shortDescription = $tab['shortDescription'];
+            else throw new RequiredFieldException('shortDescription');
+
+            //optional field sourcesUrl
+            if( isset( $tab['sourcesUrl'] ) ) $sourcesUrl = $tab['sourcesUrl'];
+
+            //required field visits
+            if( isset( $tab['visits'] ) ) $visits = $tab['visits'];
+            else throw new RequiredFieldException('visits');
+
+            if( isset( $tab['category'] ) && Utilities::is_integer($tab['category']) )
+                $category = DAOFactory::getCategoryDAO()->load($tab['category']);
+            else throw new RequiredFieldException('category');
+
+            if( isset( $tab['state'] ) && Utilities::is_integer($tab['state']) )
+                $state = DAOFactory::getStateDAO()->load($tab['state']);
+            else throw new RequiredFieldException('state');
+
+            return new Publication($id, $title, $shortDescription, $visits, $category, $state, $sourcesUrl, $persons, $ideas, $technologies, $tags);
+        }
     }
 
     /**
      * Load all the persons for this publication
      */
      public function loadPersons() {
-         $this->_persons = DAOFactory::getPersonDAO()->selectByIdPublication;
+         $this->_persons = DAOFactory::getPersonDAO()->selectByIdPublication($this->_id);
      }
 
     /**
      * Load all the ideas for this publication
      */
      public function loadIdeas() {
-         $this->_ideas = DAOFactory::getIdeaDAO()->selectByIdPublication;
+         $this->_ideas = DAOFactory::getIdeaDAO()->selectByIdPublication($this->_id);
      }
 
     /**
      * Load all the technologies for this publication
      */
      public function loadTechnologies() {
-         $this->_technologies = DAOFactory::getTechnologyDAO()->selectByIdPublication;
+         $this->_technologies = DAOFactory::getTechnologyDAO()->selectByIdPublication($this->_id);
      }
 
     /**
      * Load all the tags for this publication
      */
      public function loadTags() {
-         $this->_tags = DAOFactory::getTagDAO()->selectByIdPublication;
+         $this->_tags = DAOFactory::getTagDAO()->selectByIdPublication($this->_id);
      }
+
+    /**
+     * Update this Publication persons in db
+     */
+    public function updatePersons() {
+        DAOFactory::getPublicationDAO()->updatePersons($this);
+    }
+
+    /**
+     * Update this Publication ideas in db
+     */
+    public function updateIdeas() {
+        DAOFactory::getPublicationDAO()->updateIdeas($this);
+    }
+
+    /**
+     * Update this Publication technologies in db
+     */
+    public function updateTechnologies() {
+        DAOFactory::getPublicationDAO()->updateTechnologies($this);
+    }
+
+    /**
+     * Update this Publication tags in db
+     */
+    public function updateTags() {
+        DAOFactory::getPublicationDAO()->updateTags($this);
+    }
 
     /**
      * @return string
@@ -196,7 +262,7 @@ class Publication extends Domain {
     }
 
     /**
-     * @var Category
+     * @return Category
      */
      public function getCategory() {
          return $this->_category;
@@ -210,7 +276,7 @@ class Publication extends Domain {
      }
 
     /**
-     * @var Publication
+     * @return State
      */
      public function getState() {
          return $this->_state;
@@ -219,36 +285,64 @@ class Publication extends Domain {
     /**
      * @param int
      */
-     public function setPublication($idPublication) {
-         $this->_state = DAOFactory::getPublicationDAO()->load($idPublication);
+     public function setState($idState) {
+         $this->_state = DAOFactory::getStateDAO()->load($idState);
      }
 
     /**
-     * @var Person|Array
+     * @return Person|Array
      */
      public function getPersons() {
          return $this->_persons;
      }
 
     /**
-     * @var Idea|Array
+     * @param Person|Array
+     */
+     public function setPersons($persons) {
+         return $this->_persons = $persons;
+     }
+
+    /**
+     * @return Idea|Array
      */
      public function getIdeas() {
          return $this->_ideas;
      }
 
     /**
-     * @var Technology|Array
+     * @param Idea|Array
+     */
+     public function setIdeas($ideas) {
+         return $this->_ideas = $ideas;
+     }
+
+    /**
+     * @return Technology|Array
      */
      public function getTechnologies() {
          return $this->_technologies;
      }
 
     /**
-     * @var Tag|Array
+     * @param Technology|Array
+     */
+     public function setTechnologies($technologies) {
+         return $this->_technologies = $technologies;
+     }
+
+    /**
+     * @return Tag|Array
      */
      public function getTags() {
          return $this->_tags;
+     }
+
+    /**
+     * @param Tag|Array
+     */
+     public function setTags($tags) {
+         return $this->_tags = $tags;
      }
 
 }

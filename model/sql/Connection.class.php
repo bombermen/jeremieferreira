@@ -12,8 +12,9 @@ class Connection {
     
     const USER = 'admin';
     const HOST = 'localhost';
+    const PORT = '3306';
     const PWD = 'H0n0Lulu43v3r';
-    const DB = 'jeremieferreira';
+    const DB_NAME = 'jeremieferreira';
     
     /**
      * @return PDO connection
@@ -25,7 +26,8 @@ class Connection {
             try
             {
                 $pdo = new PDO('mysql:host='.self::HOST.
-                                            ';dbname='.self::DB,
+                                            ';dbname='.self::DB_NAME.
+                                            ';port='.self::PORT,
                                             self::USER,
                                             self::PWD,
                                             array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -36,7 +38,7 @@ class Connection {
                 
                 self::$_instance = $pdo;
             } catch (Exception $ex) {
-                $logger = Logger::getLogger('debug');
+                $logger = Logger::getRootLogger();
                 $logger->error($ex->getMessage());
                 die();
             }

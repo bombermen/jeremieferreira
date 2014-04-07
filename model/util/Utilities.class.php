@@ -1,24 +1,30 @@
 <?php
 
 /**
- * Description of RequiredFieldException
+ * Description of Utilities
  *
  * @author Jeremie Ferreira
  */
 final class Utilities {
     
     /**
-     * Return true if at least one of the item in $domainArray share the same id
-     * as $domain
-     * @param Domain $domain
-     * @param Domain $domainArray
-     * @return boolean
+     * @param mixed $val value to test
+     * @return bool true if $val is an integer
      */
-    public static function domainInArray($domain, $domainArray) {
-        foreach($domainArray as $item) {
-            if($item->getId() == $domain->getId()) return true;
-        }
-        return false;
+    public static function is_integer($val) {
+        return ( is_numeric($val) ) && ( (int)$val == (float)$val );
     }
     
+    /**
+     * Convert domain array into id array
+     * @param Domain[] $domainArray
+     * @return int[]
+     */
+    public static function getIds(array $domainArray) {
+        $result = array();
+        foreach($domainArray as $domain) {
+            $result[] = $domain->getId();
+        }
+        return $result;
+    }
 }

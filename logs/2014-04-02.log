@@ -1,0 +1,1 @@
+22:49:53 [ERROR] in Connection.class.php method:getConnection l:40 : SQLSTATE[HY000] [1045] Access denied for user 'admin'@'localhost' (using password: YES)
