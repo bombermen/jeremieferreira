@@ -19,6 +19,16 @@ class Category extends Domain {
     /**
      * @var int
      */
+    private $_sort;
+
+    /**
+     * @var int
+     */
+    private $_level;
+
+    /**
+     * @var int
+     */
     private $_visible;
 
     //references
@@ -47,17 +57,21 @@ class Category extends Domain {
      * explicit ctor
      * @param $id           Category's id                (required)
      * @param $name         Category's name              (required)
+     * @param $sort         Category's sort              (required)
+     * @param $level        Category's level             (required)
      * @param $visible      Category's visible           (required)
      * @param $description  Category's description       (optional)
      * @param $children     Category's children          (optional)
      * @param $publications Category's publications      (optional)
      * @param $parent       Category's parent            (optional)
      */
-     public function Category($id, $name, $visible, $description = null, $children = null, $publications = null, $parent = null) {
+     public function Category($id, $name, $sort, $level, $visible, $description = null, $children = null, $publications = null, $parent = null) {
 
         $this->_id = $id;
         $this->_name = $name;
         $this->_description = $description;
+        $this->_sort = $sort;
+        $this->_level = $level;
         $this->_visible = $visible;
         $this->_children = $children;
         $this->_publications = $publications;
@@ -76,6 +90,8 @@ class Category extends Domain {
             //set all temporary attributes to null
             $id = null;
             $name = null;
+            $sort = null;
+            $level = null;
             $visible = null;
             $description = null;
             $children = null;
@@ -93,6 +109,14 @@ class Category extends Domain {
             //optional field description
             if( isset( $tab['description'] ) ) $description = $tab['description'];
 
+            //required field sort
+            if( isset( $tab['sort'] ) ) $sort = $tab['sort'];
+            else throw new RequiredFieldException('sort');
+
+            //required field level
+            if( isset( $tab['level'] ) ) $level = $tab['level'];
+            else throw new RequiredFieldException('level');
+
             //required field visible
             if( isset( $tab['visible'] ) ) $visible = $tab['visible'];
             else throw new RequiredFieldException('visible');
@@ -100,7 +124,7 @@ class Category extends Domain {
             if( isset( $tab['parent'] ) && Utilities::is_integer($tab['parent']) )
                 $parent = DAOFactory::getCategoryDAO()->load($tab['parent']);
 
-            return new Category($id, $name, $visible, $description, $children, $publications, $parent);
+            return new Category($id, $name, $sort, $level, $visible, $description, $children, $publications, $parent);
         }
     }
 
@@ -144,6 +168,34 @@ class Category extends Domain {
      */
     public function setDescription($description) {
         $this->_description = $description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSort() {
+        return $this->_sort;
+    }
+
+    /**
+     * @param int
+     */
+    public function setSort($sort) {
+        $this->_sort = $sort;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel() {
+        return $this->_level;
+    }
+
+    /**
+     * @param int
+     */
+    public function setLevel($level) {
+        $this->_level = $level;
     }
 
     /**

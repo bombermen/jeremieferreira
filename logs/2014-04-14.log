@@ -1,0 +1,2 @@
+16:35:02 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [2002] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée.
+

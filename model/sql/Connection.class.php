@@ -10,12 +10,6 @@ class Connection {
     
     public function __construct() { }
     
-    const USER = 'admin';
-    const HOST = 'localhost';
-    const PORT = '3306';
-    const PWD = 'H0n0Lulu43v3r';
-    const DB_NAME = 'jeremieferreira';
-    
     /**
      * @return PDO connection
      */
@@ -25,11 +19,11 @@ class Connection {
         {
             try
             {
-                $pdo = new PDO('mysql:host='.self::HOST.
-                                            ';dbname='.self::DB_NAME.
-                                            ';port='.self::PORT,
-                                            self::USER,
-                                            self::PWD,
+                $pdo = new PDO('mysql:host='.HOST.
+                                            ';dbname='.DB_NAME.
+                                            ';port='.PORT,
+                                            USER,
+                                            PWD,
                                             array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
                 
                 //show query error

@@ -1,0 +1,26 @@
+.h1 Titre premier relatant du contexte
+Voici un résumé dont l'intérêt réside dans sa longueur. En effet son seul but consiste à remplir l'espace en vue d'un test et je vais vous expliquer en 2 sous-parties comment il y parvient.
+
+.h2 Premier intérêt : le renforcement de l'impression
+Il est un point crucial dans le développement d'un site web qui est la phase de tests. Si cette dernière est négligée, c'est toute l'application qui risque de se révéler instable dans le temps.
+Le présent texte s'inscrit dans cette démarche en proposant un contenu qui bien que dénué de tout intérêt intellectuel, en possède toutefois un d'ordre conceptuel puisqu'il me permet de mettre au jour toutes les subtilités susceptibles d'apparaître de manière inopinée pendant la phase de production.
+
+.h2 Intérêt second : la libération
+"Je ne suis pas un numéro, je suis un homme libre" disait le personnage principal d'une série qui n'est pas assez récente pour que j'en connaisse le nom. Si de cette série je n'ai gardé que cette réplique c'est justement parce que je ne l'ai jamais regardé qu'au travers d'un reportage relatant la mort de l'acteur du personnage principal dont j'évoquais la phrase culte.
+Qu'il repose en paix. Sa mort ne fut pas vaine puisqu'elle m'a enseigné l'adage reprise en introduction de cette sous-partie et qui représente de manière admirable l'état d'esprit dans lequel je suis plongé alors que je m'arrache de la lourde tâche de codage pour m'adonner à la rédaction de cette publication test sur un fond d'Ouverture de Guillaume Tell par Rossini version techno.
+
+.h1 Titre second sur les pommes
+.h2 La reinette
+Cette pomme me semble-t-il est verte. Cette assertion est à prendre avec le plus de précautions possible puisque je n'en suis pas absolument certain. Je prie les plus passionnés de se renseigné auprès d'un expert en la matière et de ne pas répandre mes dire de manière abusive en l'absence de ce paratexte.
+
+.h2 La Reine-Claude
+Ca tombe bien, mon ex-tuteur lui aussi se prénomme Claude. Coïncidence ? Je ne pense pas.
+
+.h1 Troisieme Titre
+L'impobabilité de cet événement me laisse perplexe. Comment cette partie peut-elle exister ? Je ne le sais pas et peut-être ne le saurons nous jamais. Toujours est-il que cette partie existe bien et qu'il va nous falloir lui faire une place au sein de cette page.
+
+.h2 Oh mon Dieu
+Cela va trop loin. Je ne pourrais guère supporter longtemps ce petit jeu. Ces phrases ne devraient pas être. Elles sont dangereuses et risquent de mettre en péril toute l'harmonie de l'article ! S'il m'étais possible de revenir en arrière, je le ferais assurément mais les lois de la causalité ne sont pas de mon côté et je crains qu'elle ne révelle en cette occasion la plus grande frustration possible pour un homme : la mise en évidence d'une fatalité qu'il ne peut accepter alors même que ce qu'il déplore dans cette action à laquelle il est soumis est par essence la même substance qui l'en répugne.
+
+.h2 Pour aller plus loin
+Pour ceux qui ont compris l'ultime phrase de la première sous-partie de la troisième partie, ce qui n'est pas mon cas, je vous propose d'explorer de manière plus approfondie encore les tréfonds d'un esprit sinistre qui parvient à boucler sur la même idée plusieurs fois et cela sans changer de phrase et en poncutant le plus rarement possible afin de faire perdre, à lui-même ainsi qu'à ses lecteurs, le fil de ses idées qui pourtant ne sont que pour les unes les images des autres et réciproquement pour aller toujours plus loin dans une inception de moins en moins contrôlée, et alors que ces mots lui viennent à l'esprit, il commence à vaciller sous sa propre action hypnothisante et commence doucement et lentement à se sentir lourd... si lourd que le fil commence à se perdre mais persiste malgré tout comme un lézard sur lequel il n'aurait aucun contrôle, qui se faufile toujours de par sa propre volonté et ne connaît pour obstacle que le sommeil de son auteur.

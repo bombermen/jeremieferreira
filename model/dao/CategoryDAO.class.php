@@ -12,7 +12,7 @@ class CategoryDAO implements DAO {
      * @return Category
      */
     public function load($id) {
-        $statement = 'SELECT idCategory AS id,name,description,visible,parent FROM Category WHERE idCategory = :id';
+        $statement = 'SELECT idCategory AS id,name,description,sort,level,visible,parent FROM Category WHERE idCategory = :id';
         $query = Connection::getConnection()->prepare($statement);
 
         //get the first result and return it after closing the cursor
@@ -32,7 +32,7 @@ class CategoryDAO implements DAO {
     */
     public function loadChildren($id) {
         $result = array();
-        $statement = 'SELECT idCategory AS id, name, description, visible, parent FROM Category WHERE parent = :id';
+        $statement = 'SELECT idCategory AS id, name, description, sort, level, visible, parent FROM Category WHERE parent = :id';
         $query = Connection::getConnection()->prepare($statement);
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->execute();
@@ -49,7 +49,7 @@ class CategoryDAO implements DAO {
      */
     public function selectByIdPublication($idPublication) {
         $result = array();
-        $statement = 'SELECT idCategory AS id, name, description, visible, parent FROM Category ref INNER JOIN null asso ON ref.idCategory = asso.category WHERE Publication = :idPublication';
+        $statement = 'SELECT idCategory AS id, name, description, sort, level, visible, parent FROM Category ref INNER JOIN null asso ON ref.idCategory = asso.category WHERE Publication = :idPublication';
         $query = Connection::getConnection()->prepare($statement);
 
         //Get the results as Category instances array and return it
@@ -67,7 +67,7 @@ class CategoryDAO implements DAO {
      */
     public function selectAll() {
         $result = array();
-        $statement = 'SELECT idCategory AS id, name, description, visible, parent FROM Category';
+        $statement = 'SELECT idCategory AS id, name, description, sort, level, visible, parent FROM Category';
         $query = Connection::getConnection()->prepare($statement);
 
         //Get the results as Category instance array and return it
@@ -86,7 +86,7 @@ class CategoryDAO implements DAO {
     public function selectAllOrderBy($column, $asc = true) {
         $result = array();
         $sorting = $asc ? ' ASC' : ' DESC';
-        $statement = 'SELECT idCategory AS id, name, description, visible, parent FROM Category ORDER BY '.$column.$sorting;
+        $statement = 'SELECT idCategory AS id, name, description, sort, level, visible, parent FROM Category ORDER BY '.$column.$sorting;
         $query = Connection::getConnection()->prepare($statement);
         $query->bindParam(':column', $column, PDO::PARAM_STR);
         //Get the results as Category instance array and return it
@@ -97,7 +97,7 @@ class CategoryDAO implements DAO {
             $result[] = Category::parseArray($line);
         return $result;
     }
-
+    
     /**
      * Delete from Category table by primary key
      * @param int $id primary key
@@ -117,11 +117,13 @@ class CategoryDAO implements DAO {
      */
     public function insert($category) {
         //create the statement
-        $statement = 'INSERT INTO Category (name, description, visible, parent) VALUES (:name, :description, :visible, :parent)';
+        $statement = 'INSERT INTO Category (name, description, sort, level, visible, parent) VALUES (:name, :description, :sort, :level, :visible, :parent)';
         $query = Connection::getConnection()->prepare($statement);
 
         //bind parameters and execute query
         $name = $category->getName();
+        $sort = $category->getSort();
+        $level = $category->getLevel();
         $visible = $category->getVisible();
 
         if( !is_null( $category->getDescription() ) )
@@ -134,6 +136,8 @@ class CategoryDAO implements DAO {
             $parent = null;
 
         $query->bindParam(':name', $name, PDO::PARAM_STR, 255);
+        $query->bindParam(':sort', $sort, PDO::PARAM_INT);
+        $query->bindParam(':level', $level, PDO::PARAM_INT);
         $query->bindParam(':visible', $visible, PDO::PARAM_INT);
 
         if( is_null( $description ) )
@@ -155,12 +159,14 @@ class CategoryDAO implements DAO {
     public function update($category) {
         //create the statement
         if ($category->getId() == 0) throw new Exception('Impossible update on non existing object');
-        $statement = 'UPDATE Category SET name = :name, description = :description, visible = :visible, parent = :parent WHERE idCategory = :id';
+        $statement = 'UPDATE Category SET name = :name, description = :description, sort = :sort, level = :level, visible = :visible, parent = :parent WHERE idCategory = :id';
         $query = Connection::getConnection()->prepare($statement);
 
         //bind parameters and execute query
         $id = $category->getId();
         $name = $category->getName();
+        $sort = $category->getSort();
+        $level = $category->getLevel();
         $visible = $category->getVisible();
 
         if( !is_null( $category->getDescription() ) )
@@ -174,6 +180,8 @@ class CategoryDAO implements DAO {
 
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->bindParam(':name', $name, PDO::PARAM_STR, 255);
+        $query->bindParam(':sort', $sort, PDO::PARAM_INT);
+        $query->bindParam(':level', $level, PDO::PARAM_INT);
         $query->bindParam(':visible', $visible, PDO::PARAM_INT);
 
         if( is_null( $description ) )

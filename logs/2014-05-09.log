@@ -1,0 +1,157 @@
+10:26:57 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:107 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:26:57 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:108 : De la n�cessit� des tests de recette
+10:26:57 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:109 : 
+10:27:12 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:107 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:27:12 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:108 : De la n�cessit� des tests de recette
+10:27:12 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:109 : Articles
+10:29:21 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:113 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:29:21 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:114 : De la n�cessit� des tests de recette
+10:29:21 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:115 : Articles
+10:29:21 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : 
+10:30:56 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:113 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:30:56 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:114 : De la nécessité des tests de recette
+10:30:56 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:115 : Articles
+10:30:56 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:33:26 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:33:26 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:33:26 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Articles
+10:33:26 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:49:04 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:49:04 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:49:04 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Projets
+10:49:04 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:58:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:58:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:58:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Projets
+10:58:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:58:49 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:58:49 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:58:49 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Projets
+10:58:49 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:59:14 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:59:14 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:59:14 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Projets
+10:59:14 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+
+10:59:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:116 : SELECT idPublication AS id,title,shortDescription,sourcesUrl,visits,category,state FROM Publication NATURAL JOIN Category c WHERE title = :title AND c.name = :categoryName
+10:59:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:117 : De la nécessité des tests de recette
+10:59:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:118 : Projets
+10:59:41 [DEBUG] in PublicationController.php method:getPublicationFromUrl l:119 : Array
+(
+    [id] => 1
+    [0] => 1
+    [title] => De la nécessité des tests de recette
+    [1] => De la nécessité des tests de recette
+    [shortDescription] => Cet article traite de la nécessité des tests de recette.
+    [2] => Cet article traite de la nécessité des tests de recette.
+    [sourcesUrl] => 
+    [3] => 
+    [visits] => 0
+    [4] => 0
+    [category] => 4
+    [5] => 4
+    [state] => 3
+    [6] => 3
+)
+

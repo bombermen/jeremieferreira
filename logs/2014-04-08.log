@@ -1,0 +1,12 @@
+23:22:56 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:22:56 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:09 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:09 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:16 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:16 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:49 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:23:50 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:24:30 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:24:30 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:24:50 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
+23:24:50 [ERROR] in Connection.class.php method:getConnection l:36 : SQLSTATE[HY000] [1040] Too many connections
